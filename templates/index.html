@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Üye Girişi</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/styles/uyegirisi.css"> 
+</head>
+<body>
+    <header class="container">
+        <nav>
+            <div class="logo">
+                <a href="/">
+                    <img src="static/logo.png" alt="bilet">
+                </a>
+            </div>
+        </nav>
+    </header>
+    <div class="login-box">
+        <div class="social-buttons">
+          <a href="https://tr-tr.facebook.com/"><button class="facebook-button">Facebook ile Giriş Yap</button></a>
+        </div>
+        <div class="social-buttons">
+          <a href="https://myaccount.google.com/?tab=kk"><button class="google-button">Google ile Giriş Yap</button></a>
+        </div>
+
+        <p class="separator">veya</p>
+
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form class="login-form" action="/exam" method="post">
+            <div class="input-group">
+                <input type="email" name="email" placeholder="E-posta Adresi" required>
+            </div>
+            <div class="input-group">
+                <input type="password" name="password" placeholder="Şifre" required>
+            </div>
+            <div class="input-group">
+                <label for="remember-me">
+                    <input type="checkbox" id="remember-me" name="remember-me"> Beni Hatırla
+                </label>
+                <a class="forgot-password-link" href="sifremi-unuttum.html">Şifrenizi mi unuttunuz?</a>
+            </div>
+            <button class="login-button" type="submit">Sınava Başla</button>
+        </form>
+        
+        <p class="register-link">Henüz üye değil misin? <a href="uyeol.html">Üye Ol</a></p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

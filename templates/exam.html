@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+    <title>Sınav</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #exam-container {
+            text-align: center;
+            width: 50%;
+            margin: auto;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            margin: 5px 0;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        li:hover {
+            background-color: #add8e6; /* Mavi renk */
+        }
+        #questions {
+            margin-top: 20px;
+        }
+        .question {
+            display: none;
+        }
+        .question.active {
+            display: block;
+        }
+        .next-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="exam-container">
+        <h1>Sınav</h1>
+        <ul id="subject-list">
+            <li data-subject="Python'da AI geliştirme">Python'da AI geliştirme</li>
+            <li data-subject="Bilgisayar görüşü">Bilgisayar görüşü</li>
+            <li data-subject="NLP (Nöro-dilbilim)">NLP (Nöro-dilbilim)</li>
+            <li data-subject="Python uygulamalarında AI modelleri uygulama">Python uygulamalarında AI modelleri uygulama</li>
+        </ul>
+
+        <div id="questions">
+            <!-- Sorular buraya yüklenecek -->
+        </div>
+
+        <!-- Sonuç sayfasına yönlendirme için gizli form -->
+        <form id="submit-form" action="/submit" method="post">
+            <input type="hidden" name="user_id" value="{{ user_id }}">
+            <button type="submit" id="submit-button" style="display:none;"></button>
+        </form>
+    </div>
+    
+    <script>
+        document.querySelectorAll('#subject-list li').forEach(item => {
+            item.addEventListener('click', function() {
+                const subject = this.getAttribute('data-subject');
+                fetchQuestions(subject);
+                document.getElementById('subject-list').style.display = 'none';
+            });
+        });
+
+        let currentQuestionIndex = 0;
+        let questionsData = [];
+
+        function fetchQuestions(subject) {
+            fetch(`/get_questions?subject=${encodeURIComponent(subject)}`)
+                .then(response => response.json())
+                .then(data => {
+                    questionsData = data.questions;
+                    currentQuestionIndex = 0;
+                    showQuestion(currentQuestionIndex);
+                });
+        }
+
+        function showQuestion(index) {
+            const questionsDiv = document.getElementById('questions');
+            questionsDiv.innerHTML = '';
+
+            if (index < questionsData.length) {
+                const question = questionsData[index];
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question', 'active');
+                questionDiv.innerHTML = `
+                    <p>${question.text}</p>
+                    ${question.answers.map(answer => `
+                        <div>
+                            <input type="radio" id="answer_${answer.id}" name="question_${question.id}" value="${answer.text}" required>
+                            <label for="answer_${answer.id}">${answer.text}</label>
+                        </div>
+                    `).join('')}
+                    <button class="next-btn">İleri</button>
+                `;
+                questionsDiv.appendChild(questionDiv);
+
+                questionDiv.querySelector('.next-btn').addEventListener('click', function() {
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex < questionsData.length) {
+                        showQuestion(currentQuestionIndex);
+                    } else {
+                        document.getElementById('submit-button').click();
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

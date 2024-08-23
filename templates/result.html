@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+    <title>Sonuç</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #result-container {
+            width: 50%;
+            margin: auto;
+        }
+        footer {
+            margin-top: 20px;
+        }
+        .retry-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            color: #007BFF;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .retry-link:hover {
+            text-decoration: underline;
+        }
+        .retry-link img {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="result-container">
+        <h1>Sonuç</h1>
+        <p>PUANINIZ: {{ score }}</p>
+        <a href="{{ url_for('exam') }}" class="retry-link">
+            <img src="static/left-arrow.png" alt="Geri" width="20" height="20">
+            Tekrar Sınava Gir
+        </a>
+        <footer>
+            <p>Geliştirici: Nakiye Sevde GÜRSULAR</p>
+        </footer>
+    </div>
+</body>
+</html>
